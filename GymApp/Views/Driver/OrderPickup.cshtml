@@ -1,0 +1,16 @@
+﻿@model GymApp.Models.Order
+@{
+    ViewBag.Title = "OrderPickup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <h4 class="title">Confirm Order</h4>
+    <p>Confirm package.</p>
+    <hr />
+    @using (Html.BeginForm("OrderPickup", "Driver", FormMethod.Post))
+    {
+        <button type="submit" class="btn btn-dark">Confirm Package</button>
+    }
+</div>
+

@@ -1,0 +1,27 @@
+﻿@model GymApp.Models.classtype
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_LayoutAdminPage.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>classtype</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.typeclass)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.typeclass)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

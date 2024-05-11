@@ -1,0 +1,173 @@
+﻿@model GymApp.Models.Order
+
+@{
+    ViewBag.Title = "Cancel";
+}
+
+<h2>Cancel</h2>
+
+<h3>Are you sure you want to Cancel this?</h3>
+
+<div>
+    <h4>Order</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.invoices.FKUserID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.invoices.FKUserID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.prodcts.ProductName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.prodcts.ProductName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Qty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Qty)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Unit_Price)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Unit_Price)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Order_Bill)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Order_Bill)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Order_Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Order_Date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeliveryFirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeliveryFirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeliveryLastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeliveryLastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeliveryPhoneNum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeliveryPhoneNum)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeliveryAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeliveryAddress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeliverySubrub)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeliverySubrub)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ZipCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ZipCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeliveryDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeliveryDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DriverName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DriverName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DriverVehicle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DriverVehicle)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm("Cancel", "HomePageTest", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <br />
+
+
+        @*<div class="row">
+                <div class="col-2">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="BankAccount">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                        My Bank account
+                    </label>
+                </div>
+                <div class="col-2">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="GymAccount" checked>
+                    <label class="form-check-label" for="flexRadioDefault2">
+                        Gym Account
+                    </label>
+                </div>
+            </div>*@
+
+        @Html.RadioButtonFor(m => m.invoices.RefundType, "BankAccount", htmlAttributes: new { @class = "form-check-input" })
+        <label class="form-check-label" for="RefundType_BankAccount">My Bank account</label>
+
+        @Html.RadioButtonFor(m => m.invoices.RefundType, "GymAccount", htmlAttributes: new { @class = "form-check-input" })
+        <label class="form-check-label" for="RefundType_GymAccount">Gym Account</label>
+
+
+
+        <br />
+        <div class="form-actions no-color">
+            <input type="submit" value="Cancel Order" class="btn btn-outline-danger p-2" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+
+</div>

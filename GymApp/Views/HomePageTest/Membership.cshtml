@@ -1,0 +1,90 @@
+﻿@using Microsoft.AspNet.Identity
+
+@{
+    ViewBag.Title = "Membership";
+}
+@{
+    GymApp.Models.ApplicationDbContext db = new GymApp.Models.ApplicationDbContext();
+    string userId = User.Identity.GetUserId();
+    GymApp.Models.ApplicationUser user = db.Users.Find(userId);
+
+}
+@if (user.Subscription != null)
+            {
+    <h3 class="text-center text--gray">Current Membership <a class="text-blue">~@user.Subscription~</a></h3>
+            }
+
+
+<div class="container py-3">
+    <header>
+        <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+            <h1 class="display-4 fw-normal">Purchase church Membership </h1>
+            <p class="fs-5 text-muted">
+                Choose a plan
+                that works for you
+            </p>
+        </div>
+    </header>
+
+    <main>
+        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+            @if (user.Subscription != "MonthlyMembership")
+            {
+                <div class="col">
+                    <div class="card mb-4 rounded-3 shadow-sm">
+                        <div class="card-header py-3">
+                            <h4 class="my-0 fw-normal">Monthly Membership</h4>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title">R350<small class="text-muted fw-light">/mo</small></h1>
+                            <ul class="list-unstyled mt-3 mb-4">
+                                <li>up to 5% discounts in our online store</li>
+                                <li>Your monthly membership dues directly enhance our church community, improving facilities, expanding outreach, and nurturing spiritual growth</li>
+</ul>
+                            <a href="@Url.Action("MonthlyMembership","HomePageTest")"><button type="button" class="w-100 btn btn-lg btn-outline-primary p-2">Purchase</button></a>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (user.Subscription != "PremiumYearly")
+            {
+                <div class="col">
+                    <div class="card mb-4 rounded-3 shadow-sm border-primary">
+                        <div class="card-header py-3 text-white bg-primary border-primary">
+                            <h4 class="my-0 fw-normal">Premium Yearly</h4>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title">R4600<small class="text-muted fw-light">/year</small></h1>
+                            <ul class="list-unstyled mt-3 mb-4">
+                                <li>up to 20% discounts in our online store</li>
+                                <li>Your monthly membership dues directly enhance our church community, improving facilities, expanding outreach, and nurturing spiritual growth</li>
+                            </ul>
+                            <a href="@Url.Action("PremiumYearly","HomePageTest")"><button type="button" class="w-100 btn btn-lg btn-outline-primary p-2">Purchase</button></a>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (user.Subscription != "YearlyMembership")
+            {
+                <div class="col">
+                    <div class="card mb-4 rounded-3 shadow-sm">
+                        <div class="card-header py-3">
+                            <h4 class="my-0 fw-normal">Yearly Membership</h4>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title">R4000<small class="text-muted fw-light">/year</small></h1>
+                            <ul class="list-unstyled mt-3 mb-4">
+                                <li>up to 10% discounts in our online store</li>
+                                <li>Your monthly membership dues directly enhance our church community, improving facilities, expanding outreach, and nurturing spiritual growth</li>
+
+                            </ul>
+                            <a href="@Url.Action("YearlyMembership","HomePageTest")"><button type="button" class="w-100 btn btn-lg btn-outline-primary p-2">Purchase</button></a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+        </div>
+    </main>
+</div>

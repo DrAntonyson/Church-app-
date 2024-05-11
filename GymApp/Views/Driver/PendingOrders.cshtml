@@ -1,0 +1,173 @@
+﻿@model GymApp.Models.PendingOrdersViewModel
+
+@{
+    ViewBag.Title = "PendingOrders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <h5 class="title">Pending Orders</h5>
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>PickupLocation</th>
+                <th>Phone</th>
+                <th>Vehicle</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Orders.Any())
+            {
+                <tr>
+                    <td colspan="7">
+                        <p class="text-center m-0">No Records Found</p>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var item in Model.Orders)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.DeliveryFirstName @item.DeliveryLastName</td>
+                        <td class="text-success">@item.Status</td>
+                        <td>@item.DeliveryAddress</td>
+                        <td>@item.DeliveryPhoneNum</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.NumberPlate))
+                            {
+                                @item.NumberPlate
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!item.IsPreparing && !item.IsArriving && !item.IsDelivered)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("OrderPickup", "Driver", new { Id = item.Id})">Order Pickup</a>
+                            }
+                            @if (item.IsPreparing && !item.IsArriving && !item.IsDelivered)
+                            {
+                                <a class="btn btn-warning" href="@Url.Action("ShipOrder", "Driver", new { Id=item.Id})">Shipping Order</a>
+                            }
+                            @if (item.IsPreparing && item.IsArriving && !item.IsDelivered)
+                            {
+                                <a class="btn btn-dark" href="@Url.Action("ConfirmDelivery", "Driver", new { id=item.Id})">Confirm Delivery</a>
+                            }
+                            @if (item.IsDelivered)
+                            {
+                                <button class="btn btn-danger" disabled>Send Receipt</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    @if (Model.Orders.Any() && Model.Orders.First().Status != "Order Is Delivered")
+    {
+        <div>
+            <div id="dvDistance" style="font-size: 20px; color: black"></div>
+        </div>
+
+        <div id="dvMap" style="min-height:500px;width:100%"></div>
+
+        if (Model.Orders.Any())
+        {
+            <input id="travelfrom" type="text" value="Durban, 115 Musgrave Rd, Berea, 4001" name="name" class="form-control" style="width:500px;display:none" disabled="disabled" />
+            <input id="travelto" type="text" name="name" value="@Model.Orders.First().DeliveryAddress, Berea" class="form-control" style="width:500px;display:none" disabled="disabled" />
+
+            <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+            <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAYgA0WDcNBnR7ewQIWEqUbNmDUdnHCL9M" type="text/javascript"></script>
+
+            <script>
+    var source, destination;
+    var directionsDisplay;
+    var directionsService = new google.maps.DirectionsService();
+
+    var map = new google.maps.Map(document.getElementById('dvMap'), {
+        center: { lat: -29.856349, lng: 31.003004 },
+        zoom: 13,
+        mapTypeId: 'roadmap'
+    });
+
+    google.maps.event.addDomListener(window, 'load', function () {
+        new google.maps.places.SearchBox(document.getElementById('travelfrom'));
+        new google.maps.places.SearchBox(document.getElementById('travelto'));
+        directionsDisplay = new google.maps.DirectionsRenderer({ 'draggable': true });
+    });
+
+    window.onload = function () {
+        setTimeout(GetRoute, 3000);
+    };
+
+    function GetRoute() {
+        directionsDisplay.setMap(map);
+        source = document.getElementById("travelfrom").value;
+        destination = document.getElementById("travelto").value;
+
+        var request = {
+            origin: source,
+            destination: destination,
+            travelMode: google.maps.TravelMode.DRIVING
+        };
+
+        directionsService.route(request, function (response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(response);
+
+                var distance = response.routes[0].legs[0].distance.value;
+
+                // Update the TraveledDistance property on the page
+                $("#traveledDistance").text(distance);
+
+                var orderId = @Model.Orders.First().Id;
+                $.ajax({
+                    url: "/Driver/UpdateDistance",
+                    type: "POST",
+                    data: { orderId: orderId, distance: distance },
+                    success: function (result) {
+                        // Handle the success response if needed
+                    },
+                    error: function (error) {
+                        // Handle the error if needed
+                    }
+                });
+            }
+        });
+
+        var service = new google.maps.DistanceMatrixService();
+        service.getDistanceMatrix({
+            origins: [source],
+            destinations: [destination],
+            travelMode: google.maps.TravelMode.DRIVING,
+            unitSystem: google.maps.UnitSystem.METRIC,
+            avoidHighways: false,
+            avoidTolls: false
+        }, function (response, status) {
+            if (status == google.maps.DistanceMatrixStatus.OK && response.rows[0].elements[0].status != "ZERO_RESULTS") {
+                var distance = response.rows[0].elements[0].distance.text;
+                var duration = response.rows[0].elements[0].duration.value;
+                var dvDistance = document.getElementById("dvDistance");
+                duration = parseFloat(duration / 60).toFixed(2);
+                dvDistance.innerHTML = "";
+                dvDistance.innerHTML += "Distance: " + distance + "<br />";
+                dvDistance.innerHTML += "Time:" + duration + " min";
+            } else {
+                alert("Unable to calculate the distance for this road");
+            }
+        });
+    }
+            </script>
+
+        }
+    }

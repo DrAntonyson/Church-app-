@@ -1,0 +1,62 @@
+﻿@model IEnumerable<GymApp.Models.Trainers>
+
+@{
+    ViewBag.Title = "Index";
+    
+    ViewBag.PageName = "Trainers";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title m-0"><b>Driver</b><span> Records</span></h5>
+
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <a class="btn btn-primary" href="@Url.Action("Create", "Trainers")">
+            New Trainer
+            <i class="fa fa-plus"></i>
+        </a>
+        <hr />
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Availability Status</th>                    
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EmailAddress)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
+                        <td>
+                        <td>
+                            @if (item.IsBooked)
+                            {
+                                <p class="text-secondary">Occupied</p>
+                            }
+                            else
+                            {
+                                <p class="text-success">Available</p>
+                            }
+                        </td>
+                        <td>
+                            <strong><a href="@Url.Action("DeleteTrainer", new {item.Id})" class="text-danger">Delete</a></strong>
+                        </td>
+                        </tr>
+                        }
+</tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
+<!-- /.card -->
+<script src="~/Content/js/jquery-3.4.1.min.js"></script>
+
+

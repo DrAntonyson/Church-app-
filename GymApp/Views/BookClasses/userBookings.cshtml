@@ -1,0 +1,84 @@
+﻿@model IEnumerable<GymApp.Models.BookClass>
+
+@{
+    ViewBag.Title = "userBookings";
+}
+
+<h4>User rooms</h4>
+
+@if (!Model.Any())
+{
+    <h2>No Active Bookings</h2>
+    <td class="btn btn-success">
+        @Html.ActionLink("Bookclasses", "index")
+    </td>
+}
+else
+{
+    <table class="table" id="maindiv">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.classtype.typeclass)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.trainer.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.datepicker)
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.classtype.typeclass)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.trainer.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.datepicker)
+                    </td>
+                    @if (item.UserBooked == null)
+                    {
+                        <td class="btn btn-success">
+                            @Html.ActionLink("Book", "Book", new { id = item.id })
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="badge badge-success">
+                            Booked
+                        </td>
+                    }
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#maindiv').DataTable({                            //Remember to change the table name or it wont work //
+                paging: true,
+                "info": false,
+                searching: false,
+                dom: 'Bfrtip',
+                buttons: [
+
+                    { extend: 'pdf', className: 'btn btn-danger glyphicon glyphicon-file' }
+                ]
+            });
+        });
+    </script>
+
+
+}

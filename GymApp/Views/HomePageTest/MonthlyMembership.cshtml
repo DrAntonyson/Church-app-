@@ -1,0 +1,49 @@
+﻿<div class="container">
+    <main>
+        <div class="py-5 text-center">
+            <h2>Welcome To Our Church Subscription</h2>
+            <p class="lead">We hope You Enjoy Our Service</p>
+        </div>
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-primary text-center">Subscription Items</span>
+                </h4>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Monthly Membership</h6>
+                            <small class="text-muted">Join Our Monthly Membership to aid in the up keep of the church and receive Member Only Discounts in our online store.</small>
+                        </div>
+                        <span class="text-muted">R350</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+                        <div class="text-success">
+                            <h6 class="my-0">You Will Gain Up To 5% Off </h6>
+                            <small>Online Purchases</small>
+                        </div>
+                        <span class="text-success"></span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Total (ZAR)</span>
+                        <strong>R350</strong>
+                    </li>
+                </ul>
+                @{
+                    double amount = 35000;
+                }
+                <form action="/HomePageTest/MonthlyMembership" method="post" class="card p-2">
+                    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                            data-key="pk_test_51MxYufJpFrhdhKyru2VgDOg9kgX5ZBzWDLxuIfH4AqvpJH29SOdVltfV4QqgAYVDxxNSXo65qyyeBapp7j0AxXjB00wC1VMehB"
+                            data-amount="@amount"
+                            data-name="Holy Rosary Church"
+                            data-image="data-image="https://images.unsplash.com/photo-1438032005730-c779502df39b?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D""
+                            data-locale="auto"
+                            data-currency="zar"></script>
+                </form>
+            </div>
+            <div class="col-3"></div>
+        </div>
+    </main>
+</div>

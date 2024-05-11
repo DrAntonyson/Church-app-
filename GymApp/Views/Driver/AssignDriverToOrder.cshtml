@@ -1,0 +1,32 @@
+﻿@model GymApp.Models.Order
+@{
+    ViewBag.Title = "Assign Driver To Order";
+    Layout = "~/Views/Shared/_LayoutAdminPage.cshtml";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<div class="content-wrapper">
+    <h4 class="title">Assign Driver</h4>
+    <p>Assign driver to this order ?.</p>
+    <hr />
+    @using (Html.BeginForm("AssignDriverToOrder", "Driver", FormMethod.Post))
+    {
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="col-form-label">Select Driver</label>
+                @Html.DropDownListFor(m => m.AssignedDriver, ViewBag.Drivers as SelectList, "-- Select Driver --", new { @class = "form-select" })
+            </div>
+            <button class="btn btn-primary mt-3" type="submit">Submit Driver Data</button>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="col-form-label">Select Vehicle</label>
+                @Html.DropDownListFor(m => m.AssignedVehicle, ViewBag.Vehicles as SelectList, "-- Select Vehicle --", new { @class = "form-select" })
+            </div>
+            <button class="btn btn-primary mt-3" type="submit">Submit Vehicle Data</button>
+        </div>
+
+    }
+</div>

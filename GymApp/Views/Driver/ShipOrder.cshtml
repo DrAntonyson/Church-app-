@@ -1,0 +1,25 @@
+﻿@model GymApp.Models.Order
+@{
+    ViewBag.Title = "ShipOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <h4 class="title">Order Shipping</h4>
+    <div class="row">
+        <div class="col-3">
+            <p>Destination Address</p>
+        </div>
+        <div class="col-3">
+            <p><b> : @Model.DeliveryAddress</b></p>
+        </div>
+    </div>
+    <hr />
+    <p>Confirm that order is in delivery process.</p>
+    <hr />
+    @using (Html.BeginForm("ShipOrder", "Driver", FormMethod.Post))
+    {
+        <button type="submit" class="btn btn-dark">Confirm Shipping</button>
+    }
+</div>
+

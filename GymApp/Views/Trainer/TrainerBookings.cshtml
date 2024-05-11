@@ -1,0 +1,118 @@
+﻿@model IEnumerable<GymApp.Models.TrainerBookings>
+@{
+    ViewBag.Title = "Bookings";
+    Layout = "~/Views/Shared/_LayoutAdminPage.cshtml";
+}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            List Of Bookings
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Orders</li>
+        </ol>
+    </section>
+    <section class="content">
+
+        <div class="row">
+            <div class="col-md-8">
+                <!-- TABLE: LATEST ORDERS -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Latest Orders</h3>
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <table class="table no-margin">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>E-mail Address</th>
+                                        <th>Weight</th>
+                                        <th>Height</th>
+                                        <th>Goal</th>
+                                        <th>Alergies</th>
+                                        <th>Diet Options</th>
+                                        <th>Trainer</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.EmailAddress)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Weight)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Height)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Goal)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Alergy)</td>
+                                            <td>
+                                                <ul>
+                                                    @foreach (var option in Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(item.DietOptions))
+                                                    {
+                                                        <li>@option</li>
+                                                    }
+                                                </ul>
+                                            </td>
+                                            @if (item.Trainer != null && item.Trainer.Any())
+                                            {
+                                                <td>
+                                                    <p>@item.Trainer.FirstOrDefault().EmailAddress</p>
+                                                </td>
+                                                <td>-</td>
+                                            }
+                                            else
+                                            {
+                                                if (ViewBag.AvailableTrainers.Count != 0)
+                                                {
+                                                    <td>
+                                                        <form action="@Url.Action("AssignTrainer")" method="post" id="@item.Id">
+                                                            @Html.AntiForgeryToken()
+                                                            <input type="hidden" name="TrainerBookingId" value="@item.Id" />
+                                                            <select name="TrainerId">
+                                                                @foreach (var trainer in ViewBag.AvailableTrainers)
+                                                                {
+                                                                    if (!trainer.IsBooked)
+                                                                    {
+                                                                        <option value="@trainer.Id">@trainer.EmailAddress</option>
+                                                                    }
+                                                                }
+                                                            </select>
+                                                        </form>
+                                                    </td>
+                                                    <td>
+                                                        <input type="button" value="Assign" class="text-primary" onclick="Submit(@item.Id)" />
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="text-danger">No Trainers</td>
+                                                    <td>-</td>
+                                                }
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div><!-- /.table-responsive -->
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+            </div>
+        </div>
+    </section>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function Submit(formId) {
+        var form = $('#' + formId); // Find the form by its ID
+        form.submit();
+    }
+</script>
+

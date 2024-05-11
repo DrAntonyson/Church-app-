@@ -1,0 +1,99 @@
+﻿@model GymApp.ViewModels.TrainerBookingVM
+
+@{
+    ViewBag.Title = "BookTrainer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Model.EmailAddress = User.Identity.Name;
+}
+
+<h2>BookTrainer</h2>
+
+<div class="p-5">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>TrainerBookings</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.EmailAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Weight, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Weight, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Weight, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Height, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Height, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Height, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Goal, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Goal, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Goal, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Alergy, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Alergy, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Alergy, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group my-3">
+                @Html.LabelFor(model => model.DietOptions, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10 p-3">
+                    <div class="checkbox">
+                        @Html.LabelFor(model => model.Fish, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.EditorFor(model => model.Fish)
+                        @Html.ValidationMessageFor(model => model.Fish, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="checkbox">
+                        @Html.LabelFor(model => model.Vegetables, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.EditorFor(model => model.Vegetables)
+                        @Html.ValidationMessageFor(model => model.Vegetables, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="checkbox">
+                        @Html.LabelFor(model => model.Beef, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.EditorFor(model => model.Beef)
+                        @Html.ValidationMessageFor(model => model.Beef, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="checkbox">
+                        @Html.LabelFor(model => model.Vegan, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.EditorFor(model => model.Vegan)
+                        @Html.ValidationMessageFor(model => model.Vegan, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="checkbox">
+                        @Html.LabelFor(model => model.Chicken, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.EditorFor(model => model.Chicken)
+                        @Html.ValidationMessageFor(model => model.Chicken, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input style="Border-radius:10px;" type="submit" value="Submit" class="btn btn-dark p-2 me-4" />
+                    <a href="@Url.Action("Booking", new {Model.Id})" class="btn btn-outline-dark p-2" style="Border-radius:10px;">Back</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

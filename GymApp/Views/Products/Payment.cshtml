@@ -1,0 +1,429 @@
+﻿@model GymApp.Models.Order
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Payment";
+}
+<style>
+    .bgful {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        padding-top: 100px;
+    }
+
+    .form-popup {
+        display: none;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border: 3px solid #f1f1f1;
+        z-index: 9;
+    }
+
+    /* Add styles to the form container */
+    .form-container {
+        max-width: 300px;
+        padding: 10px;
+        background-color: white;
+        margin: auto;
+    }
+
+
+        /* Full-width input fields */
+        .form-container input[type=text], .form-container input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            border: none;
+            background: #f1f1f1;
+        }
+
+            /* When the inputs get focus, do something */
+            .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+                background-color: #ddd;
+                outline: none;
+            }
+
+        /* Set a style for the submit/login button */
+        .form-container .btn {
+            background-color: #04AA6D;
+            color: white;
+            padding: 16px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        /* Add a red background color to the cancel button */
+        .form-container .cancel {
+            background-color: red;
+        }
+
+        /* Add some hover effects to buttons */
+        .form-container .btn:hover, .open-button:hover {
+            opacity: 1;
+        }
+</style>
+
+@{
+    GymApp.Models.RegisterViewModel rvm = new GymApp.Models.RegisterViewModel();
+    GymApp.Models.ApplicationDbContext db = new GymApp.Models.ApplicationDbContext();
+
+    var id = User.Identity.Name;
+    var GetAmount = (from x in db.Users
+                     where x.UserName == id
+                     select x.Account).FirstOrDefault();
+
+    if (GetAmount != 0)
+    {
+        ViewBag.Amount = GetAmount.ToString("R0.00");
+    }
+    else
+    {
+        ViewBag.Amount = "0";
+    }
+    float MyAmount = GetAmount;
+
+    float Payable = (float)TempData["total"];
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/cheatsheet/">
+    <script src="/assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/cheatsheet.js"></script>
+
+    <div class="row">
+        <div class="col-7 bd-example">
+            <nav>
+                <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+                    <button onclick="IsDeliveryNo()" class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Collect In Gym</button>
+                    <button onclick="IsDeliveryYes()" class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Delivery</button>
+                </div>
+            </nav>
+
+
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                    <form action="/Products/Payment" method="post" class="needs-validation">
+                        <div class="text-center">
+                            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                    data-key="pk_test_51MxYufJpFrhdhKyru2VgDOg9kgX5ZBzWDLxuIfH4AqvpJH29SOdVltfV4QqgAYVDxxNSXo65qyyeBapp7j0AxXjB00wC1VMehB"
+                                    data-amount=""
+                                    data-name="Barbell Alliance"
+                                    data-image="https://images.unsplash.com/photo-1438032005730-c779502df39b?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                    data-locale="auto"
+                                    data-currency="zar"></script>
+                        </div>
+                    </form>
+
+                    <div class="text-center">
+                        <br />
+                        <br />
+                        @if (MyAmount < Payable)
+                        {
+                            <button class="btn btn-outline-primary p-2 btn--radius" disabled>Not Enough Funds In Account</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-outline-primary p-2 btn--radius" onclick="openGymForm()">Pay With Gym Account</button>
+                        }
+                    </div>
+                </div>
+
+
+                <div class="form-popup bgful" id="myForm">
+                    <div class="form-container text-center">
+                        <form action="/Products/PaymentWithGymAccount" method="post" class="needs-validation">
+                            <h1>Gym Account Payment</h1>
+                            <br />
+                            <label for="email"><b>My Account Amount: @ViewBag.Amount</b> </label>
+                            <br />
+                            <label for="email"><b>Payable Amount: @TempData["total"]</b> </label>
+                            <br />
+                            <label for="psw"><b>Password</b></label>
+                            <br />
+                            <input class="form-control" type="password" placeholder="Enter Password" name="psw" required>
+                            <button type="submit" class="btn">Make Payment</button>
+                            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+                        </form>
+                    </div>
+                </div>
+
+
+
+                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                    <div class="container">
+                        <main>
+                            <div class="row g-5">
+                                <div class="col-md-7 col-lg-8">
+                                    <h4 class="mb-3">Delivery Address</h4>
+
+                                    <form action="/Products/Payment" method="post" id="DeliveryForm" class="needs-validation">
+                                        <div class="row g-3">
+                                            <div class="col-sm-6">
+                                                <label for="firstName" class="form-label">First name</label>
+                                                <input name="DeliveryFirstName" type="text" class="form-control" id="DeliveryFirstName" placeholder="" required>
+                                                <div class="invalid-feedback">
+                                                    Valid first name is required.
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <label for="lastName" class="form-label">Last name</label>
+                                                <input name="DeliveryLastName" type="text" class="form-control" id="DeliveryLastName" placeholder="" required>
+                                                <div class="invalid-feedback">
+                                                    Valid last name is required.
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label for="DeliveryPhoneNum" class="form-label">Phone Number</label>
+                                                <input name="DeliveryPhoneNum" type="text" class="form-control" id="DeliveryPhoneNum" placeholder="085 485 3847" required>
+                                                <div class="invalid-feedback">
+                                                    Please enter your Phone Number.
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label for="address" class="form-label">Address</label>
+                                                <input name="DeliveryAddress" type="text" class="form-control" id="DeliveryAddress" placeholder="1234 Main St" required>
+                                                <div class="invalid-feedback">
+                                                    Please enter your shipping address.
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label for="DeliverySubrub" class="form-label">Subrub</label>
+                                                <select class="form-select" id="DeliverySubrub" name="deliverySubrub" required>
+                                                    <option value="">Choose...</option>
+                                                    <option>Berea</option>
+                                                    <option>Mayville</option>
+                                                    <option>Overport</option>
+                                                    <option>Bluff</option>
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid Subrub.
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-6">
+                                                <label for="ZipCode" class="form-label">Zip</label>
+                                                <input name="ZipCode" type="text" class="form-control" id="ZipCode" placeholder="" required>
+                                                <div class="invalid-feedback">
+                                                    Zip code required.
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr class="my-4">
+
+                                        <div class="row">
+                                            <div class="form-check col-1">
+                                                <input type="checkbox" id="save-info">
+                                            </div>
+                                            <label class="col">Save this information for next time</label>
+                                        </div>
+
+                                        <hr class="my-4">
+
+                                        <div class="text-center">
+                                            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                                    data-key="pk_test_51MxYufJpFrhdhKyru2VgDOg9kgX5ZBzWDLxuIfH4AqvpJH29SOdVltfV4QqgAYVDxxNSXo65qyyeBapp7j0AxXjB00wC1VMehB"
+                                                    data-amount=""
+                                                    data-name="Barbell Alliance"
+                                                    data-image="https://img.freepik.com/free-photo/big-dumbbells-white_144627-24203.jpg?w=740&t=st=1685178563~exp=1685179163~hmac=556f91742dcb741ea4a18e8761ea8fe8c43ce70d9b98fc1a78e19a3a0cd3ef90"
+                                                    data-locale="auto"
+                                                    data-currency="zar"></script>
+                                        </div>
+
+                                    </form>
+
+                                    <div class="text-center">
+                                        <br />
+                                        <br />
+                                        @if (MyAmount < Payable)
+                                        {
+                                            <button class="btn btn-outline-primary p-2 btn--radius" disabled>Not Enough Funds In Account</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-outline-primary p-2 btn--radius" onclick="return validateForm()">Pay With Gym Account</button>
+                                        }
+                                    </div>
+
+
+                                    <script>
+
+                                    </script>
+
+                                    <div class="form-popup bgful" id="myForm">
+                                        <div class="form-container text-center">
+                                            <form action="/Products/PaymentWithGymAccount" method="post" id="DeliveryForm" class="needs-validation">
+                                                <h1>Gym Account Payment</h1>
+                                                <br />
+                                                <label for="email"><b>My Account Amount: @ViewBag.Amount</b> </label>
+                                                <br />
+                                                <label for="email"><b>Payable Amount: @TempData["total"]</b> </label>
+                                                <br />
+
+                                                <label for="psw"><b>Password</b></label>
+                                                <br />
+                                                <input class="form-control" type="password" placeholder="Enter Password" name="psw" required>
+                                                <button type="submit" class="btn">Make Payment</button>
+                                                <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+                                            </form>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-5 col-lg-4 order-md-last">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-primary">Your cart</span>
+                <span class="badge bg-primary rounded-pill">@ViewBag.ItemCount</span>
+            </h4>
+
+
+            <ul class="list-group mb-3">
+                @foreach (var item in TempData["cart"] as List<GymApp.Models.Cart>)
+                {
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">@item.productName x @item.qty</h6>
+                            <small class="text-muted">Brief description</small>
+                        </div>
+                        <span class="text-muted">R @item.price </span>
+                    </li>
+                }
+                @{
+                    string userId = User.Identity.GetUserId();
+                    GymApp.Models.ApplicationUser user = db.Users.Find(userId);
+                    if (user.Subscription != null)
+                    {
+                        <li class="list-group-item d-flex justify-content-between bg-light">
+                            <div class="text-success">
+                                <h6 class="my-0">Discount</h6>
+                                <small>MembershipType : @user.Subscription</small>
+                            </div>
+                            <span class="text-success">
+                                @if (user.Subscription == "MonthlyMembership")
+                                {
+                                    <p>5%</p>
+                                }
+                                else if (user.Subscription == "PremiumYearly")
+                                {
+                                    <p>20%</p>
+                                }
+                                else if (user.Subscription == "YearlyMembership")
+                                {
+                                    <p>10%</p>
+                                }
+                                else
+                                {
+                                    <p>Homer Is That You?????</p>
+                                }
+                            </span>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="list-group-item d-flex justify-content-between bg-light">
+                            <div class="text-success">
+                                <h6 class="my-0">Discount</h6>
+                                <small>Become A Member To Gain Excusive Discounts</small>
+                            </div>
+                            <span class="text-success">5% TO 20%</span>
+                        </li>
+                    }
+
+                }
+
+
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Total (ZAR)</span>
+                    <strong>@TempData["total"]</strong>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+}
+@section Scripts {
+    <script>
+        function IsDeliveryNo() {
+            $.ajax({
+                url: '/Products/SetDelivery',
+                type: 'POST',
+                data: { isDelivery: 'No' },
+                success: function (result) {
+                    if (result.success) {
+                        // Display success message or perform additional actions
+                        //alert('Delivery set to No successfully');
+                    } else {
+                        location.reload(); // Reload the page
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error if needed
+                }
+            });
+        }
+
+        function IsDeliveryYes() {
+            $.ajax({
+                url: '/Products/SetDelivery',
+                type: 'POST',
+                data: { isDelivery: 'Yes' },
+                success: function (result) {
+                    if (result.success) {
+                        // Display success message or perform additional actions
+                        //alert('Delivery set to Yes successfully');
+                    } else {
+                        location.reload(); // Reload the page
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error if needed
+                }
+            });
+        }
+
+
+
+        function validateForm() {
+            let x = document.forms["DeliveryForm"]["DeliveryFirstName"].value;
+            let t = document.forms["DeliveryForm"]["DeliveryLastName"].value;
+            let y = document.forms["DeliveryForm"]["DeliveryPhoneNum"].value;
+            let r = document.forms["DeliveryForm"]["DeliveryAddress"].value;
+            let o = document.forms["DeliveryForm"]["deliverySubrub"].value;
+            let n = document.forms["DeliveryForm"]["ZipCode"].value;
+
+            if ((x == "") || (t == "") || (y == "") || (r == "") || (o == "") || (n == "")) {
+                alert("Some Fields Arent Filled In!!");
+                return false;
+            }
+            else {
+                document.getElementById("myForm").style.display = "block";
+                return true;
+            }
+        }
+
+        function openGymForm() {
+            document.getElementById("myForm").style.display = "block";
+        }
+
+        function closeForm() {
+            document.getElementById("myForm").style.display = "none";
+        }
+    </script>
+}

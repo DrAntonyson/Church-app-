@@ -1,0 +1,83 @@
+﻿@model GymApp.Models.TrainerBookings
+@using Newtonsoft
+
+@{
+    ViewBag.Title = "Booking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Booking</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.EmailAddress)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Weight)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Height)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Goal)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Alergy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DietOptions)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TrainerStatus)
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => modelItem.EmailAddress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => modelItem.Weight)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => modelItem.Height)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => modelItem.Goal)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => modelItem.Alergy)
+        </td>
+        <td>
+            <ul>
+                @foreach (var item in Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(Model.DietOptions))
+                {
+                    <li class="d-flex">@item</li>
+                }
+            </ul>
+        </td>
+        @if (Model.TrainerStatus)
+        {
+            <td>
+                <p class="text-success">Approved</p>
+            </td>
+            <td>
+                @Html.ActionLink("Cancel", "Cancel", new { id = Model.Id })
+            </td>
+        }
+        else
+        {
+            <td>
+                <p class="text-secondary">Pending</p>
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+                @Html.ActionLink("Cancel", "Cancel", new { id = Model.Id })
+            </td>
+        }
+    </tr>
+</table>

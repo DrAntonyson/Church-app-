@@ -1,0 +1,71 @@
+﻿@model IEnumerable<GymApp.Models.Order>
+
+@{
+    ViewBag.Title = "OrderHistory";
+}
+
+<h2>My Purchases</h2>
+
+<table class="table text-center text--gray">
+    <tr>
+        <th>
+            ProductName
+        </th>
+        <th>
+            Qty
+        </th>
+        <th>
+            Unit Price
+        </th>
+        <th>
+            Order Bill
+        </th>
+        <th>
+            Order Date
+        </th>
+        <th>
+            Status
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.prodcts.ProductName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Qty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Unit_Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Order_Bill)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Order_Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.invoices.status)
+        </td>
+        <td>
+            @if (Request.IsAuthenticated)
+            {
+                <a class="pr-1">@Html.ActionLink("Invoice", "Invoice", new { id = item.FkInvoiceID })</a>
+
+                if ((item.invoices.status == "Paid")||(item.invoices.status == "PaidDelivery"))
+                {
+                    <a class="pr-1">| @Html.ActionLink("Cancel", "Cancel", new { id = item.Id })</a>
+                }
+                if (item.invoices.status == "PaidDelivery")
+                {
+                    <a class="pr-1">| @Html.ActionLink("TrackOrder", "TrackOrder", new { id = item.FkInvoiceID })</a>
+                }
+            }
+
+        </td>
+    </tr>
+}
+
+</table>

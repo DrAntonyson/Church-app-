@@ -1,0 +1,64 @@
+﻿@model IEnumerable<GymApp.Models.BookClass>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Consultations</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div class="content-wrapper">
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>
+                Consultation Type
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.trainer.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.datepicker)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserBooked)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.classtype.typeclass)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.trainer.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.datepicker)
+                </td>
+                @if (item.UserBooked == null)
+                {
+                    <td class="btn btn-success">
+                        @Html.ActionLink("Book", "Book", new { id = item.id })
+                    </td>
+                }
+                else
+                {
+                    <td class="badge badge-success">
+                        Booked
+                    </td>
+                }
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.id })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "NewDriver";
+    Layout = "~/Views/Shared/_LayoutAdminPage.cshtml";
+}
+
+<div class="content-wrapper">
+    <h4 class="title">New Driver</h4>
+    <p>Add new driver responsible for managing deliveries.</p>
+    <hr />
+    @using (Html.BeginForm("NewDriver", "Driver", FormMethod.Post, new { role = "form" }))
+    {
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" class="form-control py-2" name="Email" placeholder="email@example.com" />
+            </div>
+            <div class="form-group mt-2">
+                <label>Name</label>
+                <input type="text" class="form-control py-2" name="Name" placeholder="Jason Moodley" />
+            </div>
+            <button class="btn btn-primary mt-3" type="submit">Submit Driver Data</button>
+        </div>
+    }
+</div>
+
+
+

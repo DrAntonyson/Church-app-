@@ -1,0 +1,51 @@
+﻿@model GymApp.Models.BookClass
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_LayoutAdminPage.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>BookClass</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.classtype.typeclass)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.classtype.typeclass)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.trainer.TrainerRegistrationId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.trainer.TrainerRegistrationId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.datepicker)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.datepicker)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserBooked)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserBooked)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

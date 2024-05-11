@@ -1,0 +1,68 @@
+﻿@model GymApp.Models.Returns
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+
+
+
+
+<div>
+    <h4>Returns</h4>
+
+    <center>
+        <img src="data:image/png;base64,@ViewBag.Url" alt="Alternate Text" height="250" width="250" />
+    </center>
+
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Order.DeliveryFirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Order.DeliveryFirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReturnReason)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReturnReason)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RequestedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RequestedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsApproved)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsApproved)
+        </dd>
+
+
+
+
+
+    </dl>
+</div>
+
+<center>
+    @Html.ActionLink("Approve","Approve", new {id=Model.ReturnId})
+</center>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.ReturnId }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
